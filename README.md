@@ -2,6 +2,9 @@
 
 Written and open sourced by [Code Lead Succeed: Engineering Management in Practice](https://emplaybook.com/)
 
+[![bigquery lib CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/bigquery-lib.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/bigquery-lib.yaml)
+
+
 ## Requirements
 - Python ^3.13 for most projects (check individual pyproject.toml)
 - [uv](https://docs.astral.sh/uv/)

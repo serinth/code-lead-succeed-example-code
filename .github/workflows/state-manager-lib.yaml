@@ -1,15 +1,16 @@
-name: bigquery lib CI
+name: State Manager CI
 on:
   push:
     paths:
-      - libs/bigquery/**
+      - libs/state_manager/**
+
 jobs:
-  bigquery-lib-ci:
-    name: bigquery lib CI
+  state-manager-lib-ci:
+    name: State Manager lib CI
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./libs/bigquery
+        working-directory: ./libs/state_manager
     steps:
       - uses: actions/checkout@v4
 
