@@ -2,7 +2,7 @@ name: bigquery lib CI
 on: [push]
 jobs:
   bigquery-lib-ci:
-    name: python
+    name: bigquery lib CI
     runs-on: ubuntu-latest
 
     steps:
@@ -13,9 +13,6 @@ jobs:
         with:
           version: "0.5.5"
 
-      - name: change to working dir
-        run: cd libs/bigquery
-
       - name: Set up Python
         run: uv python install
 
@@ -24,3 +21,6 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
+  defaults:
+  run:
+    working-directory: libs/bigquery
