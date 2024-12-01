@@ -1,5 +1,5 @@
 name: bigquery lib CI
-
+on: [push]
 jobs:
   bigquery-lib-ci:
     name: python
