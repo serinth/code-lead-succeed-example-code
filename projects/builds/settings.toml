@@ -1,0 +1,2 @@
+bucket = "code-lead-succeed-metrics"
+state_file_path = "builds/state.json"
