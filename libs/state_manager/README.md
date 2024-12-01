@@ -17,3 +17,4 @@ Interfaces can be extended to use databases though if necessary.
 
 * `interfaces.py` contains the main interfaces
 * `gcs.py` is the GCP cloud storage implementation
+* `s3.py` is the AWS S3 implementation
