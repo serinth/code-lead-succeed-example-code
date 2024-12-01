@@ -1,9 +1,13 @@
 name: bigquery lib CI
 on: [push]
+
 jobs:
   bigquery-lib-ci:
     name: bigquery lib CI
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./libs/bigquery
     steps:
       - uses: actions/checkout@v4
 
@@ -20,6 +24,3 @@ jobs:
 
       - name: Run tests
         run: uv run pytest
-  defaults:
-    run:
-      working-directory: libs/bigquery
