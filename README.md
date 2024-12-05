@@ -40,7 +40,6 @@ cd /libs/xxx
 uv build
 ```
 
-
 ## Creating configs for new projects
 The projects generally use [dynaconf](https://www.dynaconf.com/). To generate your `config.py` with toml, run:
 ```bash
@@ -51,6 +50,13 @@ uvx dynaconf init -f toml
 Put your access token in `.secrets.toml` e.g.
 ```toml
 access_token=<my token>
+```
+
+## Building a container
+You can reuse the Dockerfile at the top level and just pass in the project path for the runnable.
+```bash
+# cd into the same directory as the Dockerfile then:
+docker build --build-arg PROJECT_PATH="projects/builds" -t <your tag> .
 ```
 
 ## GitHub actions helpers

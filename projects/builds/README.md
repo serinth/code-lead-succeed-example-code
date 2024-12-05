@@ -10,7 +10,21 @@ The default example here uses:
 # Requirements
 - GCP or AWS account with their CLI tool installed and the appropriate credentials.
 - A bucket already created. Infrastructure code is outside the scope of this example runner.
+- a GCP project and dataset already created
 
+## settings.toml
+Contains the default settings. They should be self explanatory. Though to get the workflow ID, you may need to curl:
+```bash
+https://api.github.com/repos/<owner>/<repo>/actions/workflows
+```
+
+## .secrets.toml
+This isn't checked in so your infrastructure code needs to add/mount it.
+
+```toml
+dynaconf_merge = true
+access_token = "your github access token"
+```
 
 ## Running it manually
 ```bash
