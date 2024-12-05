@@ -4,6 +4,7 @@ Written and open sourced by [Code Lead Succeed: Engineering Management in Practi
 
 [![bigquery lib CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/bigquery-lib.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/bigquery-lib.yaml)
 
+[![State Manager CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/state-manager-lib.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/state-manager-lib.yaml)
 
 ## Requirements
 - Python ^3.13 for most projects (check individual pyproject.toml)
@@ -45,4 +46,16 @@ The projects generally use [dynaconf](https://www.dynaconf.com/). To generate yo
 ```bash
 uvx dynaconf init -f toml
 # generates settings.toml and .secrets.toml
+```
+
+Put your access token in `.secrets.toml` e.g.
+```toml
+access_token=<my token>
+```
+
+## GitHub actions helpers
+```bash
+# get the workflow ids via the API for configs
+# https://api.github.com/repos/<owner>/<repo>/actions/workflows
+https://api.github.com/repos/serinth/code-lead-succeed-metrics/actions/workflows
 ```

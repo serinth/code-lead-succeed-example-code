@@ -17,11 +17,19 @@ dependencies = [
     { name = "loguru" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "google-cloud-bigquery", specifier = ">=3.27.0" },
     { name = "loguru", specifier = ">=0.7.2" },
 ]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.3.3" }]
 
 [[package]]
 name = "boto3"

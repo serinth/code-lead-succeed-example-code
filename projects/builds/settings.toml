@@ -1,2 +1,13 @@
 bucket = "code-lead-succeed-metrics"
 state_file_path = "builds/state.json"
+initial_days_to_look_back = 30
+
+[repos]
+owner = "serinth"
+name = "code-lead-succeed-metrics"
+workflow_id = "130765645"
+
+[gcp]
+project_id = "code-lead-succeed"
+dataset_id = "metrics"
+table_id = "build_times"
