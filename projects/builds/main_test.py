@@ -60,6 +60,7 @@ def test_get_github_workflow_build_times_successful(mock_successful_response: Di
         assert builds[0].repo == "test-owner/test-repo"
         assert builds[0].commit == "abc123"
         assert builds[0].branch == "main"
+        assert builds[0].status == "completed"
         assert builds[0].duration_secs == 300  # 5 minutes
         
         assert builds[1].id == "124"

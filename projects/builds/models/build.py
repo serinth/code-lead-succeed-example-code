@@ -16,4 +16,5 @@ class Build:
     branch: str
     repo: str
     duration_secs: int
+    status: str
     closed_at: Optional[str] = None

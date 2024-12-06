@@ -74,6 +74,7 @@ def get_github_workflow_build_times(
                             closed_at=updated_at.strftime(datetime_str_format),
                             commit=run["head_sha"],
                             branch=run["head_branch"],
+                            status=run["status"],
                             repo=f"{repo_owner}/{repo_name}",
                             duration_secs=(updated_at - started_at).seconds
                         )

@@ -35,6 +35,7 @@ def setup_build_table(
             bigquery.SchemaField("commit", "STRING", mode="REQUIRED"),
             bigquery.SchemaField("branch", "STRING", mode="REQUIRED"),
             bigquery.SchemaField("repo", "STRING", mode="REQUIRED"),
+            bigquery.SchemaField("status", "STRING", mode="REQUIRED"),
             bigquery.SchemaField("duration_secs", "INT64", mode="REQUIRED")
         ]
         
