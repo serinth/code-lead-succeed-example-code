@@ -32,6 +32,10 @@ uv run pytest
 - `libs/*` - Reusable libraries that can be published to an artifact store like AWS CodeArtifact or Nexus. Projects can reuse anything in `lib`
 - `projects/*` - Everything under projects is a separate and isolated thing that can be deployed independently. They're all just put under this monorepo for easy reference. Projects can use one or more things under `lib`.
 
+## Projects
+- `/projects/builds` - Gets you build times, default implementation is GitHub actions. Relevant [emplaybook article here](https://emplaybook.com/metrics/productivity_metrics).
+- `/projects/ai_code_reviewer` - GitHub PR bot that will leverage a local LLM to provide feedback on security, readability and testability.
+
 ### Building packages in libs
 ```bash
 cd /libs/xxx
