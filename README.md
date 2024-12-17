@@ -2,7 +2,7 @@
 
 Written and open sourced by [Code Lead Succeed: Engineering Management in Practice](https://emplaybook.com/)
 
-[![bigquery lib CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/bigquery-lib.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/bigquery-lib.yaml)[![State Manager CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/state-manager-lib.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/state-manager-lib.yaml)[![Build Times CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/builds-project.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/builds-project.yaml)
+[![bigquery lib CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/bigquery-lib.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/bigquery-lib.yaml)[![State Manager CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/state-manager-lib.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/state-manager-lib.yaml)[![Build Times CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/builds-project.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/builds-project.yaml)[![AI Code Reviewer CI](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/ai-reviewer-project.yaml/badge.svg)](https://github.com/serinth/code-lead-succeed-metrics/actions/workflows/ai-reviewer-project.yaml)
 
 ## Requirements
 - Python ^3.13 for most projects (check individual pyproject.toml)
