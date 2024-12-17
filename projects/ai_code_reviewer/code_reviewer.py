@@ -126,7 +126,7 @@ class CodeReviewer:
             raise ValueError(f"Invalid JSON response from model: {str(je)}")
         except Exception as e:
             return {
-                "error": f"Failed to analyze code: {str(e)}",
+                "error": [f"Failed to analyze code: {str(e)}"],
                 "readability": [],
                 "testability": [],
                 "security": []

@@ -1,0 +1,29 @@
+name: AI Code Reviewer CI
+on:
+  push:
+    paths:
+      - projects/ai_code_reviewer/**
+
+jobs:
+  ai-code-reviewer-project-ci:
+    name: AI Code Reviewer Project CI
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./projects/ai_code_reviewer
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "0.5.5"
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Install the project
+        run: uv sync --all-extras --dev
+
+      - name: Run tests
+        run: uv run pytest

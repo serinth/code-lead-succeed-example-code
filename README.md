@@ -33,8 +33,8 @@ uv run pytest
 - `projects/*` - Everything under projects is a separate and isolated thing that can be deployed independently. They're all just put under this monorepo for easy reference. Projects can use one or more things under `lib`.
 
 ## Projects
-- `/projects/builds` - Gets you build times, default implementation is GitHub actions. Relevant [emplaybook article here](https://emplaybook.com/metrics/productivity_metrics).
-- `/projects/ai_code_reviewer` - GitHub PR bot that will leverage a local LLM to provide feedback on security, readability and testability.
+- `/projects/builds` - Gets you build times, default implementation is GitHub actions. Related [playbook here](https://emplaybook.com/metrics/productivity_metrics).
+- `/projects/ai_code_reviewer` - GitHub PR bot that will leverage a local LLM to provide feedback on security, readability and testability. Related [playbook here](https://emplaybook.com/metrics/ai_code_reviews).
 
 ### Building packages in libs
 ```bash
