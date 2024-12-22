@@ -1,4 +1,4 @@
-# Reusable metrics code for Engineering departments
+# Reusable code for Engineering departments
 
 Written and open sourced by [Code Lead Succeed: Engineering Management in Practice](https://emplaybook.com/)
 
@@ -55,15 +55,20 @@ access_token=<my token>
 ```
 
 ## Building a container
-You can reuse the Dockerfile at the top level and just pass in the project path for the runnable.
+You can reuse the Dockerfile at the top level and just pass in the project path for the runnable for metrics type code:
 ```bash
 # cd into the same directory as the Dockerfile then:
 docker build --build-arg PROJECT_PATH="projects/builds" -t <your tag> .
 ```
 
+TODO:
+- [x] Generic Dockerfile for metrics-type code
+- [ ] Dockerfile for the AI code reviewer
+
+
 ## GitHub actions helpers
 ```bash
 # get the workflow ids via the API for configs
 # https://api.github.com/repos/<owner>/<repo>/actions/workflows
-https://api.github.com/repos/serinth/code-lead-succeed-metrics/actions/workflows
+https://api.github.com/repos/serinth/code-lead-succeed-example-code/actions/workflows
 ```
