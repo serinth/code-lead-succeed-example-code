@@ -1,0 +1,16 @@
+[project]
+name = "code-quality-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dynaconf>=3.2.6",
+    "langchain-ollama>=0.2.2",
+    "langchain>=0.3.13",
+    "langgraph>=0.2.60",
+    "loguru>=0.7.3",
+    "pydantic>=2.10.4",
+    "requests>=2.32.3",
+    "langchain-community>=0.3.13",
+]

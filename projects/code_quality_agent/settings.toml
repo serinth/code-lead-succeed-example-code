@@ -1,0 +1,23 @@
+[db.vector]
+uri = "http://localhost"
+db = ""
+
+[db.app]
+uri = "http://localhost"
+db = ""
+
+
+[llm.contextualizer]
+model_name = ""
+api_key = ""
+temperature = 1.0
+
+[llm.code_analyzer]
+model_name = ""
+api_key = ""
+temperature = 0.3
+
+[llm.doc_analyzer]
+model_name = ""
+api_key = ""
+temperature = 1.0
