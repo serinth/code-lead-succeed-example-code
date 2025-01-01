@@ -1,10 +1,11 @@
 [project]
-name = "github-tool"
+name = "code-analysis-tool"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "loguru>=0.7.3",
     "pygithub>=2.5.0",
     "python-dateutil>=2.9.0.post0",
 ]

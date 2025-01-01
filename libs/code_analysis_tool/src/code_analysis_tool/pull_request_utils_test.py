@@ -1,8 +1,8 @@
-from typing import Any
 import pytest
+from typing import Any
 from unittest.mock import Mock, patch
 from github.PullRequest import PullRequest
-from github_tool.pull_request_utils import get_raw_diff
+from code_analysis_tool.pull_request_utils import get_raw_diff
 
 def create_mock_file(filename: str, patch_content: str | None) -> Mock:
     """Helper function to create a mock file object"""
