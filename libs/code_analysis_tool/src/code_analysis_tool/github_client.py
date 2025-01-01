@@ -41,13 +41,6 @@ class GitHubClient(SourceControlFetcher):
 
     def _convert_pull_request(self, github_pr: GithubPullRequest) -> PullRequest:
         """Convert GitHub pull request to platform-agnostic PullRequest model."""
-        try:
-            file_diffs = get_raw_diff(github_pr)
-        except Exception as e:
-            # If we fail to get diffs, log the error but continue with empty diffs
-            logger.warn(f"Warning: Failed to get diffs for PR #{github_pr.number}: {str(e)}")
-            file_diffs = {}
-
         return PullRequest(
             id=str(github_pr.id),
             number=github_pr.number,
@@ -58,7 +51,8 @@ class GitHubClient(SourceControlFetcher):
             merged_at=github_pr.merged_at,
             merged=github_pr.merged,
             description=github_pr.body,
-            file_diffs=file_diffs
+            file_diffs=None,  # Don't load diffs immediately
+            _diff_loader=lambda: get_raw_diff(github_pr)  # Provide loader function
         )
 
     def get_user_by_id(self, user_id: str) -> Optional[User]:

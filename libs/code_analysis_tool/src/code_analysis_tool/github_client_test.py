@@ -124,7 +124,14 @@ def test_get_merged_pull_requests_success(github_client: GitHubClient) -> None:
     assert len(result) == 1
     assert isinstance(result[0], PullRequest)
     assert result[0].number == 1
-    assert result[0].file_diffs == {"test.py": "diff content"}
+    
+    # Test that diffs haven't been loaded yet
+    assert result[0]._file_diffs is None
+    
+    # Now access file_diffs to trigger lazy loading
+    diffs = result[0].file_diffs
+    assert diffs == {"test.py": "diff content"}
+    
     github_client.github.get_repo.assert_called_once_with("owner/repo")
     mock_repo.get_pulls.assert_called_once_with(state='closed', sort='updated', direction='desc')
 
