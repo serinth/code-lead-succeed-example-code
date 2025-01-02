@@ -42,6 +42,7 @@ def display_pull_requests(github_client: GitHubClient, repo_name: str, since_dat
                 logger.info("Files changed:")
                 for filename, diff in pr.file_diffs.items():
                     logger.info(f"- {filename}")
+                    logger.info(f"- {diff}")
     except Exception as e:
         logger.error(f"Failed to fetch pull requests: {str(e)}")
 

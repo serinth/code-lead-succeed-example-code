@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import List, Dict
+from typing import List
 from datetime import datetime
 from typing import Optional
+from document_tool.models.document import Document
 
 class DesignDocumentFetcher(ABC):
     """Interface for fetching design documents from various sources."""
@@ -12,7 +13,7 @@ class DesignDocumentFetcher(ABC):
         user_email: str, 
         start_date: datetime,
         space_key: Optional[str] = None
-    ) -> List[Dict]:
+    ) -> List[Document]:
         """Fetch pages created by a specific user after a given date.
 
         Args:
@@ -21,6 +22,6 @@ class DesignDocumentFetcher(ABC):
             space_key: Optional space key to limit the search to a specific space
 
         Returns:
-            List of dictionaries containing page information
+            List of Document objects containing page information
         """
         pass 
