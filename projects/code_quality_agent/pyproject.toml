@@ -1,7 +1,7 @@
 [project]
 name = "code-quality-agent"
 version = "0.1.0"
-description = "Add your description here"
+description = "A sub agent as part of a productivity AI"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -13,4 +13,15 @@ dependencies = [
     "pydantic>=2.10.4",
     "requests>=2.32.3",
     "langchain-community>=0.3.13",
+    "code-analysis-tool",
+    "document-tool",
+    "langchain-openai>=0.2.14",
+    "langchain-anthropic>=0.3.1",
 ]
+
+[tool.uv.sources]
+code-analysis-tool = { workspace = true }
+document-tool = { workspace = true }
+
+[tool.uv.workspace]
+members = ["../../libs/*"]

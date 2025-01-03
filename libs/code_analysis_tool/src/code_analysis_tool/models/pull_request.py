@@ -5,6 +5,7 @@ from code_analysis_tool.models.user import User
 from code_analysis_tool.models.repository import Repository
 from loguru import logger
 
+
 class PullRequest:
     def __init__(self, 
                  id: str,

@@ -6,14 +6,20 @@ db = ""
 uri = "http://localhost"
 db = ""
 
+[cvs]
+integration =  "github"
+uri = ""
+api_key = ""
+days_to_look_back = 30
 
 [llm.contextualizer]
-model_name = ""
+model_name = "codeqwen:latest"
 api_key = ""
 temperature = 1.0
+uri = "http://localhost:11434"
 
 [llm.code_analyzer]
-model_name = ""
+model_name = "codeqwen:latest"
 api_key = ""
 temperature = 0.3
 
