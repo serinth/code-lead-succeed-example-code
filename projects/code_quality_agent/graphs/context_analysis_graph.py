@@ -1,34 +1,21 @@
-from enum import Enum
-from typing import Optional
 from loguru import logger
 from langgraph.graph import Graph, StateGraph
 from langchain_core.messages import AIMessage
-from langchain_anthropic import ChatAnthropic
-from langchain_ollama.llms import OllamaLLM
+from langchain_core.language_models import BaseLanguageModel
+
+from graphs.context_analysis_nodes import ContextAnalyzerNode
 from states.context_analysis_state import ContextAnalysisState
 from edges.context_analysis_edges import (
     prepare_initial_state,
     process_llm_response_for_context_assessment
 )
 
+from code_analysis_tool.models.pull_request import PullRequest
+from typing import Dict, List
 
-class ContextAnalyzerNode(Enum):
-    PREPARE_INITIAL_STATE = "ctx_agent_prepare_initial_state"
-    RUN_LLM = "ctx_agent_run_llm"
-    PROCESS_LLM_RESPONSE = "ctx_agent_process_context_assessment"
-
-
-# TODO add options to swap models from Ollama to Anthropic and OpenAI
-def create_graph(model_name: str, uri: Optional[str] = None, temperature: float = 0.2) -> Graph:
+def create_graph(llm: BaseLanguageModel, pr_cache: Dict[str, List[PullRequest]]) -> Graph:
     # Create graph with Pydantic state
     workflow = StateGraph(ContextAnalysisState, output=ContextAnalysisState)
-    
-    # Create LLM node
-    llm = OllamaLLM(
-        model=model_name,
-        temperature=temperature,
-        base_url=uri
-    )
     
     # Add nodes
     workflow.add_node(ContextAnalyzerNode.PREPARE_INITIAL_STATE.value, prepare_initial_state)
@@ -47,7 +34,7 @@ def create_graph(model_name: str, uri: Optional[str] = None, temperature: float 
     
     # Set entry and exit points
     workflow.set_entry_point(ContextAnalyzerNode.PREPARE_INITIAL_STATE.value)
-    workflow.set_finish_point(ContextAnalyzerNode.PROCESS_LLM_RESPONSE.value)
+    workflow.set_finish_point(ContextAnalyzerNode.RUN_LLM.value)
     try:           
         return workflow.compile()
     except Exception as e:

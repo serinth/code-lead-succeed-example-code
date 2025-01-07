@@ -25,3 +25,8 @@ document-tool = { workspace = true }
 
 [tool.uv.workspace]
 members = ["../../libs/*"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+]
