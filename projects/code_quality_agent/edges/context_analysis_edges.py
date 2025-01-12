@@ -3,7 +3,6 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain.output_parsers import PydanticOutputParser
 from states.context_analysis_state import ContextAnalysisState, ContextAnalysisFeedback
 from states.context_analysis_feedback import ContextAnalysisFeedback
-from llm_parser import extract_json
 
 def prepare_initial_state(state: ContextAnalysisState) -> ContextAnalysisState:
     """First node in the graph that prepares the messages for LLM."""

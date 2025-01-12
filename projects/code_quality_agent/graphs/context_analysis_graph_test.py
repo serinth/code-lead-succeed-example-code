@@ -1,11 +1,10 @@
-from typing import Dict, List
+from typing import List
 import pytest
 from loguru import logger
 from dataclasses import dataclass
 from models.employee import Employee
 from models.levels import SeniorityLevel
 from states.context_analysis_state import ContextAnalysisState
-from code_analysis_tool.models.pull_request import PullRequest
 from graphs.context_analysis_graph import create_graph
 from langchain_ollama.llms import OllamaLLM
 
@@ -152,7 +151,6 @@ test_cases: List[TestCase] = [
     ]
 
 
-
 @pytest.fixture
 def llm():
     return OllamaLLM(
@@ -161,15 +159,11 @@ def llm():
         base_url="http://localhost:11434"
     )
 
-@pytest.fixture
-def pr_cache() -> Dict[str, List[PullRequest]]:
-    return {}
 
 @pytest.mark.parametrize("test_case", test_cases)
 def test_context_analysis(
     test_case: TestCase,
-    llm: OllamaLLM,
-    pr_cache: Dict[str, List[PullRequest]]
+    llm: OllamaLLM
 ) -> None:
     try:
         # Arrange
@@ -180,13 +174,9 @@ def test_context_analysis(
             analysis_feedback=None
         )
 
-        # Setup PR cache for the test employee
-        pr_cache[test_case.employee.id] = []
-
         # Act
-        graph = create_graph(llm=llm, pr_cache=pr_cache)
+        graph = create_graph(llm=llm)
         final_state = graph.invoke(initial_state)
-
         final_state = ContextAnalysisState(**final_state)
 
         # Assert
@@ -222,12 +212,11 @@ def test_context_analysis(
 
 def test_error_handling(
     llm: OllamaLLM,
-    pr_cache: Dict[str, List[PullRequest]]
 ) -> None:
     try:
         # Test with invalid state
         invalid_state = None
-        graph = create_graph(llm=llm, pr_cache=pr_cache)
+        graph = create_graph(llm=llm)
         
         with pytest.raises(Exception):
             graph.invoke(invalid_state)
