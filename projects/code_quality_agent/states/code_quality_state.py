@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Callable
 from enum import Enum
 from pydantic import BaseModel, Field
 from langchain_core.messages import BaseMessage
@@ -151,19 +151,20 @@ class PullRequestEvaluation(BaseModel):
     testability: Testability = Field(
         description="Evaluation of code testability aspects for this PR."
     )
+    decision_function: Callable[[List[Decision]], Decision] = Field(
+        description="Custom decision function to calculate the final decision based on category decisions.",
+        default=lambda decisions: Decision.PASS if all(d == Decision.PASS for d in decisions) else Decision.FAIL
+    )
 
     @property
     def final_decision(self) -> Decision:
         """Calculate the final decision based on the categories' final decisions."""
-        if all(
-                category.final_decision == Decision.PASS for category in [
-                    self.readability_and_maintainability,
-                    self.security,
-                    self.testability
-                ]
-        ):
-            return Decision.PASS
-        return Decision.FAIL
+        decisions = [
+            self.readability_and_maintainability.final_decision,
+            self.security.final_decision,
+            self.testability.final_decision
+        ]
+        return self.decision_function(decisions)
 
 
 class CodeQualityEvaluation(BaseModel):
