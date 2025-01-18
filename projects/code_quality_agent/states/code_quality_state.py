@@ -27,6 +27,9 @@ class QualityLevel(int, Enum):
     WORST = 0
     BEST = 100
 
+class Decision(str, Enum):
+    PASS = "PASS"
+    FAIL = "FAIL"
 
 class ReadabilityAndMaintainability(BaseModel):
     semantic_understanding: str = Field(
@@ -48,10 +51,9 @@ class ReadabilityAndMaintainability(BaseModel):
     )
 
     @property
-    def final_decision(self) -> str:
+    def final_decision(self) -> Decision:
         """Calculate the final decision based on the score and threshold."""
-        return "PASS" if self.score >= self.threshold else "FAIL"
-
+        return Decision.PASS if self.score >= self.threshold else Decision.FAIL
 
 class Security(BaseModel):
     input_validation: str = Field(
@@ -79,10 +81,9 @@ class Security(BaseModel):
     )
 
     @property
-    def final_decision(self) -> str:
+    def final_decision(self) -> Decision:
         """Calculate the final decision based on the score and threshold."""
-        return "PASS" if self.score >= self.threshold else "FAIL"
-
+        return Decision.PASS if self.score >= self.threshold else Decision.FAIL
 
 class Testability(BaseModel):
     modularity: str = Field(
@@ -108,10 +109,9 @@ class Testability(BaseModel):
     )
 
     @property
-    def final_decision(self) -> str:
+    def final_decision(self) -> Decision:
         """Calculate the final decision based on the score and threshold."""
-        return "PASS" if self.score >= self.threshold else "FAIL"
-
+        return Decision.PASS if self.score >= self.threshold else Decision.FAIL
 
 class PullRequestEvaluation(BaseModel):
     pr_id: str = Field(
@@ -128,18 +128,17 @@ class PullRequestEvaluation(BaseModel):
     )
 
     @property
-    def final_decision(self) -> str:
+    def final_decision(self) -> Decision:
         """Calculate the final decision based on the categories' final decisions."""
         if all(
-                category.final_decision == "PASS" for category in [
-                    self.readability_and_maintainability,
-                    self.security,
-                    self.testability
-                ]
+            category.final_decision == Decision.PASS for category in [
+                self.readability_and_maintainability,
+                self.security,
+                self.testability
+            ]
         ):
-            return "PASS"
-        return "FAIL"
-
+            return Decision.PASS
+        return Decision.FAIL
 
 class CodeQualityEvaluation(BaseModel):
     employee: Employee = Field(
@@ -148,14 +147,13 @@ class CodeQualityEvaluation(BaseModel):
     messages: List[BaseMessage] = Field(
         description="List of messages"
     )
-
     pull_requests: List[PullRequestEvaluation] = Field(
         description="Evaluations for individual pull requests."
     )
 
     @property
-    def final_decision(self) -> str:
+    def final_decision(self) -> Decision:
         """Calculate the final decision based on the evaluations of all PRs and their category decisions."""
-        if all(pr.final_decision == "PASS" for pr in self.pull_requests):
-            return "PASS"
-        return "FAIL"
+        if all(pr.final_decision == Decision.PASS for pr in self.pull_requests):
+            return Decision.PASS
+        return Decision.FAIL
