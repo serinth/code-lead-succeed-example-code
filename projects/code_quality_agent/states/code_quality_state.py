@@ -21,3 +21,52 @@ class CodeQualityState(BaseModel):
     employee: Employee = Field(description="Employee object")
     messages: List[BaseMessage] = Field(description="List of messages")
     assessment: Optional[PRQualityAssessment] = Field(description="Code quality assessment", default=None)
+
+
+class ReadabilityAndMaintainability(BaseModel):
+    semantic_understanding: str = Field(
+        description="Assessment of semantic understanding, including intent, complexity, and logical coherence."
+    )
+    design_pattern_recognition: str = Field(
+        description="Evaluation of the use of design patterns, anti-patterns, and adherence to SOLID principles."
+    )
+    documentation_quality: str = Field(
+        description="Assessment of documentation quality, including value-added comments, missing documentation, and consistency with code."
+    )
+    score: int = Field(
+        description="Score for readability and maintainability (0-100).",
+        ge=0,
+        le=100
+    )
+    threshold: int = Field(
+        description="Threshold score for passing (0-100).",
+        ge=0,
+        le=100
+    )
+
+    @property
+    def final_decision(self) -> str:
+        """Calculate the final decision based on the score and threshold."""
+        return "PASS" if self.score >= self.threshold else "FAIL"
+
+
+class CodeQualityEvaluation(BaseModel):
+    employee: Employee = Field(
+        description="Employee object"
+    )
+    messages: List[BaseMessage] = Field(
+        description="List of messages"
+    )
+    assessment: Optional[PRQualityAssessment] = Field(
+        description="Code quality assessment",
+        default=None
+    )
+    readability_and_maintainability: ReadabilityAndMaintainability = Field(
+        description="Evaluation of code readability and maintainability aspects."
+    )
+    security: Security = Field(
+        description="Evaluation of code security aspects."
+    )
+    testability: Testability = Field(
+        description="Evaluation of code testability aspects."
+    )
