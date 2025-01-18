@@ -23,13 +23,28 @@ class CodeQualityState(BaseModel):
     messages: List[BaseMessage] = Field(description="List of messages")
     assessment: Optional[PRQualityAssessment] = Field(description="Code quality assessment", default=None)
 
+
 class QualityLevel(int, Enum):
     WORST = 0
     BEST = 100
 
+
 class Decision(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
+
+
+class Recommendation(BaseModel):
+    line_numbers: List[int] = Field(
+        description="Lines of code where the issue is identified."
+    )
+    issue: str = Field(
+        description="Description of the identified issue."
+    )
+    recommended_fix: str = Field(
+        description="Suggested fix or improvement for the identified issue."
+    )
+
 
 class BaseEvaluation(BaseModel):
     score: QualityLevel = Field(
@@ -40,11 +55,16 @@ class BaseEvaluation(BaseModel):
         ge=QualityLevel.WORST,
         le=QualityLevel.BEST
     )
+    recommendations: Optional[List[Recommendation]] = Field(
+        description="List of recommendations for improving this aspect.",
+        default=None
+    )
 
     @property
     def final_decision(self) -> Decision:
         """Calculate the final decision based on the score and threshold."""
         return Decision.PASS if self.score >= self.threshold else Decision.FAIL
+
 
 class ReadabilityAndMaintainability(BaseEvaluation):
     semantic_understanding: str = Field(
@@ -56,6 +76,7 @@ class ReadabilityAndMaintainability(BaseEvaluation):
     documentation_quality: str = Field(
         description="Assessment of documentation quality, including value-added comments, missing documentation, and consistency with code."
     )
+
 
 class Security(BaseEvaluation):
     input_validation: str = Field(
@@ -74,6 +95,7 @@ class Security(BaseEvaluation):
         description="Analysis of third-party dependencies for known vulnerabilities."
     )
 
+
 class Testability(BaseEvaluation):
     modularity: str = Field(
         description="Evaluation of the modularity of the code, including clear separation of concerns and encapsulation."
@@ -88,6 +110,7 @@ class Testability(BaseEvaluation):
         description="Additional notes or remarks by the evaluator for context or clarification.",
         default=None
     )
+
 
 class PullRequestEvaluation(BaseModel):
     pr_id: str = Field(
@@ -107,14 +130,15 @@ class PullRequestEvaluation(BaseModel):
     def final_decision(self) -> Decision:
         """Calculate the final decision based on the categories' final decisions."""
         if all(
-            category.final_decision == Decision.PASS for category in [
-                self.readability_and_maintainability,
-                self.security,
-                self.testability
-            ]
+                category.final_decision == Decision.PASS for category in [
+                    self.readability_and_maintainability,
+                    self.security,
+                    self.testability
+                ]
         ):
             return Decision.PASS
         return Decision.FAIL
+
 
 class CodeQualityEvaluation(BaseModel):
     employee: Employee = Field(
