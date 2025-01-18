@@ -1,4 +1,5 @@
 from typing import List
+from pydantic import BaseModel
 import pytest
 from unittest.mock import Mock
 from loguru import logger
@@ -8,7 +9,8 @@ from datetime import datetime
 from models.employee import Employee
 from models.levels import SeniorityLevel
 from states.code_quality_state import CodeQualityState
-from graphs.code_quality_graph import create_graph
+from graphs.code_quality_graph import create_analysis_graph
+from edges.code_quality_edges import prepare_pr_for_analysis, process_llm_response_for_code_quality_assessment
 from code_analysis_tool.models.pull_request import PullRequest
 from code_analysis_tool.models.user import User
 from code_analysis_tool.models.repository import Repository
@@ -95,6 +97,10 @@ def llm() -> OllamaLLM:
         base_url="http://localhost:11434"
     )
 
+@pytest.fixture
+def one_test_case() -> TestCase:
+    return test_cases[0]
+
 @pytest.mark.parametrize("test_case", test_cases)
 def test_code_quality_analysis(
     test_case: TestCase,
@@ -109,7 +115,13 @@ def test_code_quality_analysis(
         )
 
         # Act
-        graph = create_graph(llm=llm, pr=test_case.pr)
+        graph = create_analysis_graph(
+            llm=llm, pr=test_case.pr, 
+            state_class=CodeQualityState, 
+            prepare_function=prepare_pr_for_analysis, 
+            process_function=process_llm_response_for_code_quality_assessment, 
+            agent_name="code_quality"
+            )
         final_state = graph.invoke(initial_state)
         final_state = CodeQualityState(**final_state)
 
@@ -132,14 +144,25 @@ def test_code_quality_analysis(
         logger.error(f"Test failed for case '{test_case.name}': {str(e)}")
         raise
 
+
 def test_error_handling(
-    llm: OllamaLLM
+    llm: OllamaLLM,
+    one_test_case: TestCase
 ) -> None:
+    class InvalidState(BaseModel):
+        pass
+
     try:
         # Test with invalid state
         invalid_state = None
         pr = Mock(spec=PullRequest)
-        graph = create_graph(llm=llm, pr=pr)
+        graph = create_analysis_graph(
+            llm=llm, pr=one_test_case.pr, 
+            state_class=InvalidState, 
+            prepare_function=prepare_pr_for_analysis, 
+            process_function=process_llm_response_for_code_quality_assessment, 
+            agent_name="fail_agent"
+            )
         
         with pytest.raises(Exception):
             graph.invoke(invalid_state)

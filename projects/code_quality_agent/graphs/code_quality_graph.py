@@ -1,51 +1,78 @@
-from loguru import logger
-from langgraph.graph import Graph, StateGraph
+from typing import Callable, TypeVar, Type
+from enum import Enum
+from pydantic import BaseModel
+from langgraph.graph import StateGraph
+from langgraph.graph.state import CompiledStateGraph
 from langchain_core.messages import AIMessage
 from langchain_core.language_models import BaseLanguageModel
-
-from graphs.code_quality_nodes import CodeQualityNode
-from states.code_quality_state import CodeQualityState, PRQualityAssessment
-from edges.code_quality_edges import (
-    prepare_pr_for_analysis,
-    process_llm_response_for_code_quality_assessment
-)
-
 from code_analysis_tool.models.pull_request import PullRequest
+from loguru import logger
+# Generic type for the state
+T = TypeVar('T', bound=BaseModel)
 
-def create_graph(llm: BaseLanguageModel, pr: PullRequest) -> Graph:
-    """Create a graph for analyzing PR quality."""
-    # Create graph with Pydantic state
-    workflow = StateGraph(CodeQualityState, output=CodeQualityState)
+class ANALYSIS_NODES(Enum):
+    PREPARE_PR = "PREPARE_PR"
+    RUN_ANALYSIS = "RUN_ANALYSIS"
+    PROCESS_ANALYSIS = "PROCESS_ANALYSIS"
+
+def create_analysis_graph(
+    llm: BaseLanguageModel,
+    pr: PullRequest,
+    state_class: Type[T],
+    prepare_function: Callable[[T, PullRequest], T],
+    process_function: Callable[[T], T],
+    agent_name: str
+) -> CompiledStateGraph:
+    """
+    Create a reusable graph for analyzing PRs with custom state and processing functions.
     
-    # Add nodes
+    Args:
+        llm: The language model to use for analysis
+        pr: The pull request to analyze
+        state_class: The Pydantic state class to use
+        prepare_function: Function to prepare the PR for analysis
+        process_function: Function to process the LLM response
+        agent_name: Name of the agent, used to prefix the node names
+    
+    Returns:
+        Graph: Compiled workflow graph
+    """
+    prepare_pr_node_name = agent_name + ANALYSIS_NODES.PREPARE_PR.value
+    run_analysis_node_name = agent_name + ANALYSIS_NODES.RUN_ANALYSIS.value
+    process_analysis_node_name = agent_name + ANALYSIS_NODES.PROCESS_ANALYSIS.value
+    
+        # Create graph with provided state class
+    workflow = StateGraph(state_class, output=state_class)
+    
+    # Add nodes with custom functions
     workflow.add_node(
-        CodeQualityNode.PREPARE_PR.value,
-        lambda state: prepare_pr_for_analysis(state, pr)
+        prepare_pr_node_name,
+        lambda state: prepare_function(state, pr)
     )
 
     workflow.add_node(
-        CodeQualityNode.RUN_QUALITY_ANALYSIS.value,
-        lambda state: CodeQualityState(
-            employee=state.employee,
-            messages=state.messages + [AIMessage(content=llm.invoke(state.messages))],
-            assessment=None
-        )
+        run_analysis_node_name,
+        lambda state: state_class.model_validate({
+            **state.model_dump(),
+            'messages': state.messages + [AIMessage(content=llm.invoke(state.messages))]
+        })
     )
+
     workflow.add_node(
-        CodeQualityNode.PROCESS_INITIAL_ANALYSIS.value,
-        process_llm_response_for_code_quality_assessment
+        agent_name + ANALYSIS_NODES.PROCESS_ANALYSIS.value,
+        process_function
     )
 
     # Connect the nodes
-    workflow.add_edge(CodeQualityNode.PREPARE_PR.value, CodeQualityNode.RUN_QUALITY_ANALYSIS.value)
-    workflow.add_edge(CodeQualityNode.RUN_QUALITY_ANALYSIS.value, CodeQualityNode.PROCESS_INITIAL_ANALYSIS.value)
+    workflow.add_edge(prepare_pr_node_name, run_analysis_node_name)
+    workflow.add_edge(run_analysis_node_name, process_analysis_node_name)
 
     # Set entry and exit points
-    workflow.set_entry_point(CodeQualityNode.PREPARE_PR.value)
-    workflow.set_finish_point(CodeQualityNode.PROCESS_INITIAL_ANALYSIS.value)
+    workflow.set_entry_point(prepare_pr_node_name)
+    workflow.set_finish_point(process_analysis_node_name)
 
     try:
         return workflow.compile()
     except Exception as e:
-        logger.error(f"Failed to create code quality graph: {e}")
+        logger.error(f"Failed to create analysis graph: {e}")
         raise
