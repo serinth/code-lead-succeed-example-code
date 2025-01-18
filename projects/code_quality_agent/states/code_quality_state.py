@@ -149,10 +149,7 @@ class CodeQualityEvaluation(BaseModel):
     messages: List[BaseMessage] = Field(
         description="List of messages"
     )
-    assessment: Optional[PRQualityAssessment] = Field(
-        description="Code quality assessment",
-        default=None
-    )
+
     pull_requests: List[PullRequestEvaluation] = Field(
         description="Evaluations for individual pull requests."
     )
