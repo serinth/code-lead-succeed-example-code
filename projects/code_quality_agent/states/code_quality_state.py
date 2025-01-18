@@ -49,6 +49,36 @@ class ReadabilityAndMaintainability(BaseModel):
         """Calculate the final decision based on the score and threshold."""
         return "PASS" if self.score >= self.threshold else "FAIL"
 
+class Testability(BaseModel):
+    modularity: str = Field(
+        description="Evaluation of the modularity of the code, including clear separation of concerns and encapsulation."
+    )
+    test_coverage: str = Field(
+        description="Assessment of the test coverage, focusing on critical paths and edge cases."
+    )
+    ease_of_testing: str = Field(
+        description="Evaluation of how easily the code can be tested, including the presence of test hooks or dependencies."
+    )
+    evaluator_notes: Optional[str] = Field(
+        description="Additional notes or remarks by the evaluator for context or clarification.",
+        default=None
+    )
+    score: int = Field(
+        description="Score for testability (0-100).",
+        ge=0,
+        le=100
+    )
+    threshold: int = Field(
+        description="Threshold score for passing (0-100).",
+        ge=0,
+        le=100
+    )
+
+    @property
+    def final_decision(self) -> str:
+        """Calculate the final decision based on the score and threshold."""
+        return "PASS" if self.score >= self.threshold else "FAIL"
+
 
 class CodeQualityEvaluation(BaseModel):
     employee: Employee = Field(
