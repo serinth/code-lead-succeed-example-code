@@ -31,18 +31,9 @@ class Decision(str, Enum):
     PASS = "PASS"
     FAIL = "FAIL"
 
-class ReadabilityAndMaintainability(BaseModel):
-    semantic_understanding: str = Field(
-        description="Assessment of semantic understanding, including intent, complexity, and logical coherence."
-    )
-    design_pattern_recognition: str = Field(
-        description="Evaluation of the use of design patterns, anti-patterns, and adherence to SOLID principles."
-    )
-    documentation_quality: str = Field(
-        description="Assessment of documentation quality, including value-added comments, missing documentation, and consistency with code."
-    )
+class BaseEvaluation(BaseModel):
     score: QualityLevel = Field(
-        description="Score for readability and maintainability, where 0 represents WORST and 100 represents BEST."
+        description="Score, where 0 represents WORST and 100 represents BEST."
     )
     threshold: int = Field(
         description="Threshold score for passing (0-100).",
@@ -55,7 +46,18 @@ class ReadabilityAndMaintainability(BaseModel):
         """Calculate the final decision based on the score and threshold."""
         return Decision.PASS if self.score >= self.threshold else Decision.FAIL
 
-class Security(BaseModel):
+class ReadabilityAndMaintainability(BaseEvaluation):
+    semantic_understanding: str = Field(
+        description="Assessment of semantic understanding, including intent, complexity, and logical coherence."
+    )
+    design_pattern_recognition: str = Field(
+        description="Evaluation of the use of design patterns, anti-patterns, and adherence to SOLID principles."
+    )
+    documentation_quality: str = Field(
+        description="Assessment of documentation quality, including value-added comments, missing documentation, and consistency with code."
+    )
+
+class Security(BaseEvaluation):
     input_validation: str = Field(
         description="Assessment of input validation mechanisms to prevent malicious input."
     )
@@ -71,21 +73,8 @@ class Security(BaseModel):
     dependency_management: str = Field(
         description="Analysis of third-party dependencies for known vulnerabilities."
     )
-    score: QualityLevel = Field(
-        description="Score for security, where 0 represents WORST and 100 represents BEST."
-    )
-    threshold: int = Field(
-        description="Threshold score for passing (0-100).",
-        ge=QualityLevel.WORST,
-        le=QualityLevel.BEST
-    )
 
-    @property
-    def final_decision(self) -> Decision:
-        """Calculate the final decision based on the score and threshold."""
-        return Decision.PASS if self.score >= self.threshold else Decision.FAIL
-
-class Testability(BaseModel):
+class Testability(BaseEvaluation):
     modularity: str = Field(
         description="Evaluation of the modularity of the code, including clear separation of concerns and encapsulation."
     )
@@ -99,19 +88,6 @@ class Testability(BaseModel):
         description="Additional notes or remarks by the evaluator for context or clarification.",
         default=None
     )
-    score: QualityLevel = Field(
-        description="Score for testability, where 0 represents WORST and 100 represents BEST."
-    )
-    threshold: int = Field(
-        description="Threshold score for passing (0-100).",
-        ge=QualityLevel.WORST,
-        le=QualityLevel.BEST
-    )
-
-    @property
-    def final_decision(self) -> Decision:
-        """Calculate the final decision based on the score and threshold."""
-        return Decision.PASS if self.score >= self.threshold else Decision.FAIL
 
 class PullRequestEvaluation(BaseModel):
     pr_id: str = Field(
