@@ -49,6 +49,7 @@ class ReadabilityAndMaintainability(BaseModel):
         """Calculate the final decision based on the score and threshold."""
         return "PASS" if self.score >= self.threshold else "FAIL"
 
+
 class Testability(BaseModel):
     modularity: str = Field(
         description="Evaluation of the modularity of the code, including clear separation of concerns and encapsulation."
@@ -80,6 +81,34 @@ class Testability(BaseModel):
         return "PASS" if self.score >= self.threshold else "FAIL"
 
 
+class PullRequestEvaluation(BaseModel):
+    pr_id: str = Field(
+        description="Identifier for the pull request."
+    )
+    readability_and_maintainability: ReadabilityAndMaintainability = Field(
+        description="Evaluation of code readability and maintainability aspects for this PR."
+    )
+    security: Security = Field(
+        description="Evaluation of code security aspects for this PR."
+    )
+    testability: Testability = Field(
+        description="Evaluation of code testability aspects for this PR."
+    )
+
+    @property
+    def final_decision(self) -> str:
+        """Calculate the final decision based on the categories' final decisions."""
+        if all(
+                category.final_decision == "PASS" for category in [
+                    self.readability_and_maintainability,
+                    self.security,
+                    self.testability
+                ]
+        ):
+            return "PASS"
+        return "FAIL"
+
+
 class CodeQualityEvaluation(BaseModel):
     employee: Employee = Field(
         description="Employee object"
@@ -91,12 +120,13 @@ class CodeQualityEvaluation(BaseModel):
         description="Code quality assessment",
         default=None
     )
-    readability_and_maintainability: ReadabilityAndMaintainability = Field(
-        description="Evaluation of code readability and maintainability aspects."
+    pull_requests: List[PullRequestEvaluation] = Field(
+        description="Evaluations for individual pull requests."
     )
-    security: Security = Field(
-        description="Evaluation of code security aspects."
-    )
-    testability: Testability = Field(
-        description="Evaluation of code testability aspects."
-    )
+
+    @property
+    def final_decision(self) -> str:
+        """Calculate the final decision based on the evaluations of all PRs and their category decisions."""
+        if all(pr.final_decision == "PASS" for pr in self.pull_requests):
+            return "PASS"
+        return "FAIL"
