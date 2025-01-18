@@ -1,4 +1,5 @@
 from typing import List, Optional
+from enum import Enum
 from pydantic import BaseModel, Field
 from langchain_core.messages import BaseMessage
 from models.employee import Employee
@@ -22,6 +23,10 @@ class CodeQualityState(BaseModel):
     messages: List[BaseMessage] = Field(description="List of messages")
     assessment: Optional[PRQualityAssessment] = Field(description="Code quality assessment", default=None)
 
+class QualityLevel(int, Enum):
+    WORST = 0
+    BEST = 100
+
 
 class ReadabilityAndMaintainability(BaseModel):
     semantic_understanding: str = Field(
@@ -33,15 +38,13 @@ class ReadabilityAndMaintainability(BaseModel):
     documentation_quality: str = Field(
         description="Assessment of documentation quality, including value-added comments, missing documentation, and consistency with code."
     )
-    score: int = Field(
-        description="Score for readability and maintainability (0-100).",
-        ge=0,
-        le=100
+    score: QualityLevel = Field(
+        description="Score for readability and maintainability, where 0 represents WORST and 100 represents BEST."
     )
     threshold: int = Field(
         description="Threshold score for passing (0-100).",
-        ge=0,
-        le=100
+        ge=QualityLevel.WORST,
+        le=QualityLevel.BEST
     )
 
     @property
@@ -66,15 +69,13 @@ class Security(BaseModel):
     dependency_management: str = Field(
         description="Analysis of third-party dependencies for known vulnerabilities."
     )
-    score: int = Field(
-        description="Score for security (0-100).",
-        ge=0,
-        le=100
+    score: QualityLevel = Field(
+        description="Score for security, where 0 represents WORST and 100 represents BEST."
     )
     threshold: int = Field(
         description="Threshold score for passing (0-100).",
-        ge=0,
-        le=100
+        ge=QualityLevel.WORST,
+        le=QualityLevel.BEST
     )
 
     @property
@@ -97,15 +98,13 @@ class Testability(BaseModel):
         description="Additional notes or remarks by the evaluator for context or clarification.",
         default=None
     )
-    score: int = Field(
-        description="Score for testability (0-100).",
-        ge=0,
-        le=100
+    score: QualityLevel = Field(
+        description="Score for testability, where 0 represents WORST and 100 represents BEST."
     )
     threshold: int = Field(
         description="Threshold score for passing (0-100).",
-        ge=0,
-        le=100
+        ge=QualityLevel.WORST,
+        le=QualityLevel.BEST
     )
 
     @property
