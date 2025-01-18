@@ -1,7 +1,8 @@
 from typing import Callable, TypeVar, Type
 from enum import Enum
 from pydantic import BaseModel
-from langgraph.graph import Graph, StateGraph
+from langgraph.graph import StateGraph
+from langgraph.graph.state import CompiledStateGraph
 from langchain_core.messages import AIMessage
 from langchain_core.language_models import BaseLanguageModel
 from code_analysis_tool.models.pull_request import PullRequest
@@ -21,7 +22,7 @@ def create_analysis_graph(
     prepare_function: Callable[[T, PullRequest], T],
     process_function: Callable[[T], T],
     agent_name: str
-) -> Graph:
+) -> CompiledStateGraph:
     """
     Create a reusable graph for analyzing PRs with custom state and processing functions.
     
