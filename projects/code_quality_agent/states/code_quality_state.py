@@ -1,4 +1,5 @@
 from typing import List, Optional, Callable
+from datetime import datetime
 from enum import Enum
 from pydantic import BaseModel, Field
 from langchain_core.messages import BaseMessage
@@ -176,6 +177,10 @@ class CodeQualityEvaluation(BaseModel):
     )
     pull_requests: List[PullRequestEvaluation] = Field(
         description="Evaluations for individual pull requests."
+    )
+    timestamp: datetime = Field(
+        default_factory=datetime.now,
+        description="The time when this evaluation was performed."
     )
 
     @property
