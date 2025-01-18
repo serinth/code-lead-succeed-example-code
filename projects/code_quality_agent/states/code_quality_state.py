@@ -35,8 +35,13 @@ class Decision(str, Enum):
 
 
 class Recommendation(BaseModel):
-    line_numbers: List[int] = Field(
-        description="Lines of code where the issue is identified."
+    line_numbers: Optional[List[int]] = Field(
+        description="Lines of code where the issue is identified. Optional if the actual code snippet is provided.",
+        default=None
+    )
+    code_snippet: Optional[str] = Field(
+        description="Actual code snippet where the issue is identified, if line numbers are not provided.",
+        default=None
     )
     issue: str = Field(
         description="Description of the identified issue."
@@ -85,14 +90,35 @@ class Security(BaseEvaluation):
     authentication_and_authorization: str = Field(
         description="Evaluation of authentication and authorization practices."
     )
-    encryption_practices: str = Field(
-        description="Assessment of data encryption practices, both at rest and in transit."
+    cryptographic_weakness: str = Field(
+        description="Assessment of cryptographic weaknesses in data protection, both at rest and in transit."
     )
     error_handling_and_logging: str = Field(
         description="Evaluation of error handling and logging mechanisms for sensitive information exposure."
     )
     dependency_management: str = Field(
         description="Analysis of third-party dependencies for known vulnerabilities."
+    )
+    input_validation_issues: Optional[str] = Field(
+        description="Detailed description of input validation issues."
+    )
+    data_exposure_risks: Optional[str] = Field(
+        description="Assessment of potential data exposure risks."
+    )
+    injection_vulnerabilities: Optional[str] = Field(
+        description="Analysis of injection vulnerabilities, such as SQL or command injection."
+    )
+    hardcoded_secrets: Optional[str] = Field(
+        description="Evaluation of hardcoded secrets such as API keys or passwords."
+    )
+    race_conditions: Optional[str] = Field(
+        description="Assessment of potential race conditions in the code."
+    )
+    memory_safety_issues: Optional[str] = Field(
+        description="Evaluation of memory safety issues, such as buffer overflows."
+    )
+    business_logic_flaws: Optional[str] = Field(
+        description="Analysis of business logic flaws that could be exploited."
     )
 
 
