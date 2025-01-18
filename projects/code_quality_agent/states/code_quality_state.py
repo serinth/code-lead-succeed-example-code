@@ -50,6 +50,39 @@ class ReadabilityAndMaintainability(BaseModel):
         return "PASS" if self.score >= self.threshold else "FAIL"
 
 
+class Security(BaseModel):
+    input_validation: str = Field(
+        description="Assessment of input validation mechanisms to prevent malicious input."
+    )
+    authentication_and_authorization: str = Field(
+        description="Evaluation of authentication and authorization practices."
+    )
+    encryption_practices: str = Field(
+        description="Assessment of data encryption practices, both at rest and in transit."
+    )
+    error_handling_and_logging: str = Field(
+        description="Evaluation of error handling and logging mechanisms for sensitive information exposure."
+    )
+    dependency_management: str = Field(
+        description="Analysis of third-party dependencies for known vulnerabilities."
+    )
+    score: int = Field(
+        description="Score for security (0-100).",
+        ge=0,
+        le=100
+    )
+    threshold: int = Field(
+        description="Threshold score for passing (0-100).",
+        ge=0,
+        le=100
+    )
+
+    @property
+    def final_decision(self) -> str:
+        """Calculate the final decision based on the score and threshold."""
+        return "PASS" if self.score >= self.threshold else "FAIL"
+
+
 class Testability(BaseModel):
     modularity: str = Field(
         description="Evaluation of the modularity of the code, including clear separation of concerns and encapsulation."
