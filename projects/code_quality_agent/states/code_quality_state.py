@@ -3,6 +3,8 @@ from datetime import datetime
 from enum import Enum
 from pydantic import BaseModel, Field
 from langchain_core.messages import BaseMessage
+from pydantic.v1 import root_validator
+
 from models.employee import Employee
 
 
@@ -36,11 +38,11 @@ class Decision(str, Enum):
 
 
 class Recommendation(BaseModel):
-    line_numbers: Optional[List[int]] = Field(
+    line_numbers: List[int] = Field(
         description="Lines of code where the issue is identified. Optional if the actual code snippet is provided.",
-        default=None
+        default_factory=list
     )
-    code_snippet: Optional[str] = Field(
+    code_snippet: str = Field(
         description="Actual code snippet where the issue is identified, if line numbers are not provided.",
         default=None
     )
