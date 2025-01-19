@@ -47,12 +47,10 @@ class Recommendation(BaseModel):
         default=None
     )
     issue: str = Field(
-        description="Description of the identified issue.",
-        default=""
+        description="Description of the identified issue."
     )
     recommended_fix: str = Field(
-        description="Suggested fix or improvement for the identified issue.",
-        default=""
+        description="Suggested fix or improvement for the identified issue."
     )
 
 
