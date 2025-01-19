@@ -154,20 +154,20 @@ class PullRequestEvaluation(BaseModel):
     testability: Testability = Field(
         description="Evaluation of code testability aspects for this PR."
     )
-    decision_function: Callable[[List[Decision]], Decision] = Field(
-        description="Custom decision function to calculate the final decision based on category decisions.",
+    decision_function: Callable[[List[BaseEvaluation]], Decision] = Field(
+        description="Custom decision function to calculate the final decision based on all BaseEvaluation instances.",
         default=lambda decisions: Decision.PASS if all(d == Decision.PASS for d in decisions) else Decision.FAIL
     )
 
     @property
     def final_decision(self) -> Decision:
-        """Calculate the final decision based on the categories' final decisions."""
-        decisions = [
-            self.readability_and_maintainability.final_decision,
-            self.security.final_decision,
-            self.testability.final_decision
+        """Calculate the final decision based on the BaseEvaluation instances' final decisions."""
+        evaluations = [
+            self.readability_and_maintainability,
+            self.security,
+            self.testability
         ]
-        return self.decision_function(decisions)
+        return self.decision_function(evaluations)
 
 
 class CodeQualityEvaluation(BaseModel):
