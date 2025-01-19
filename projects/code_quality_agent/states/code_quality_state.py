@@ -67,7 +67,7 @@ class BaseEvaluation(BaseModel):
         le=QualityLevel.BEST,
         default=QualityLevel.BEST
     )
-    recommendations: Optional[List[Recommendation]] = Field(
+    recommendations: List[Recommendation] = Field(
         description="List of recommendations for improving this aspect.",
         default_factory=list
     )
