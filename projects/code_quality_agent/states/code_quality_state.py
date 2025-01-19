@@ -87,19 +87,19 @@ class ReadabilityAndMaintainability(BaseEvaluation):
 
 
 class Security(BaseEvaluation):
-    input_validation: str = Field(
+    input_validation: Optional[str] = Field(
         description="Assessment of input validation mechanisms to prevent malicious input."
     )
     authentication_and_authorization: str = Field(
         description="Evaluation of authentication and authorization practices."
     )
-    cryptographic_weakness: str = Field(
+    cryptographic_weakness: Optional[str] = Field(
         description="Assessment of cryptographic weaknesses in data protection, both at rest and in transit."
     )
-    error_handling_and_logging: str = Field(
+    error_handling_and_logging: Optional[str] = Field(
         description="Evaluation of error handling and logging mechanisms for sensitive information exposure."
     )
-    dependency_management: str = Field(
+    dependency_management: Optional[str] = Field(
         description="Analysis of third-party dependencies for known vulnerabilities."
     )
     input_validation_issues: Optional[str] = Field(
@@ -126,13 +126,13 @@ class Security(BaseEvaluation):
 
 
 class Testability(BaseEvaluation):
-    modularity: str = Field(
+    modularity: Optional[str] = Field(
         description="Evaluation of the modularity of the code, including clear separation of concerns and encapsulation."
     )
-    test_coverage: str = Field(
+    test_coverage: Optional[str] = Field(
         description="Assessment of the test coverage, focusing on critical paths and edge cases."
     )
-    ease_of_testing: str = Field(
+    ease_of_testing: Optional[str] = Field(
         description="Evaluation of how easily the code can be tested, including the presence of test hooks or dependencies."
     )
     evaluator_notes: Optional[str] = Field(
