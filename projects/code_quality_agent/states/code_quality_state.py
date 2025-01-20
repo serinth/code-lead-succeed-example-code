@@ -40,7 +40,7 @@ class Decision(str, Enum):
 class Recommendation(BaseModel):
     line_numbers: List[int] = Field(
         description="Lines of code where the issue is identified. Optional if the actual code snippet is provided.",
-        default_factory=list
+        default=[]
     )
     code_snippet: Optional[str] = Field(
         description="Actual code snippet where the issue is identified, if line numbers are not provided.",
@@ -67,7 +67,7 @@ class BaseEvaluation(BaseModel):
     )
     recommendations: List[Recommendation] = Field(
         description="List of recommendations for improving this aspect.",
-        default_factory=list
+        default=[]
     )
 
     @property
@@ -197,11 +197,11 @@ class CodeQualityEvaluation(BaseModel):
     )
     messages: List[str] = Field(
         description="List of messages",
-        default_factory=list
+        default=[]
     )
     pull_requests: List[PullRequestEvaluation] = Field(
         description="Evaluations for individual pull requests.",
-        default_factory=list
+        default=[]
     )
     timestamp: datetime = Field(
         description="The time when this evaluation was performed.",
