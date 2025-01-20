@@ -165,14 +165,17 @@ class PullRequestEvaluation(BaseModel):
     pr_id: str = Field(
         description="Identifier for the pull request."
     )
-    readability_and_maintainability: ReadabilityAndMaintainability = Field(
-        description="Evaluation of code readability and maintainability aspects for this PR."
+    readability_and_maintainability: Optional[ReadabilityAndMaintainability] = Field(
+        description="Evaluation of code readability and maintainability aspects for this PR.",
+        default=None
     )
-    security: Security = Field(
-        description="Evaluation of code security aspects for this PR."
+    security: Optional[Security] = Field(
+        description="Evaluation of code security aspects for this PR.",
+        default=None
     )
-    testability: Testability = Field(
-        description="Evaluation of code testability aspects for this PR."
+    testability: Optional[Testability] = Field(
+        description="Evaluation of code testability aspects for this PR.",
+        default=None
     )
     decision_function: Callable[[List[BaseEvaluation]], Decision] = Field(
         description="Custom decision function to calculate the final decision based on all BaseEvaluation instances.",
@@ -184,10 +187,16 @@ class PullRequestEvaluation(BaseModel):
     def final_decision(self) -> Decision:
         """Calculate the final decision based on the BaseEvaluation instances' final decisions."""
         evaluations = [
-            self.readability_and_maintainability,
-            self.security,
-            self.testability
+            evaluation for evaluation in [
+                self.readability_and_maintainability,
+                self.security,
+                self.testability
+            ] if evaluation is not None
         ]
+
+        if not evaluations: # No evaluations available
+            return Decision.FAIL # Fail by default, or should it be Decision.NA?
+
         return self.decision_function(evaluations)
 
 
