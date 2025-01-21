@@ -1,12 +1,11 @@
 from datetime import datetime
-from typing import List, Optional, Callable
+from typing import List, Optional
 from langchain_core.messages import BaseMessage
 from pydantic import BaseModel, Field
 from models.employee import Employee
 from states.base_evaluation import BaseEvaluation
-from models.decision import Decision
 
-
+# TODO: delete this class
 class PRQualityAssessment(BaseModel):
     pr_id: str = Field(description="ID of the PR")
     title: str = Field(description="Title of the PR")
@@ -20,44 +19,11 @@ class PRQualityAssessment(BaseModel):
     performance_suggestions: List[str] = Field(description="List of suggestions for improving performance with BigO notation", default=[])
     confidence: float  = Field(description="Float value between 0 and 1 on how confident the AI is on its assessment", default=0.0)
 
+# TODO: delete this class
 class CodeQualityState(BaseModel):
     employee: Employee = Field(description="Employee object")
     messages: List[BaseMessage] = Field(description="List of messages")
     assessment: Optional[PRQualityAssessment] = Field(description="Code quality assessment", default=None)
-
-
-class ReadabilityAndMaintainability(BaseEvaluation):
-    semantic_understanding: Optional[str] = Field(
-        description="Assessment of semantic understanding, including intent, complexity, and logical coherence.",
-        default=None
-    )
-    design_pattern_recognition: Optional[str] = Field(
-        description="Evaluation of the use of design patterns, anti-patterns, and adherence to SOLID principles.",
-        default=None
-    )
-    documentation_quality: Optional[str] = Field(
-        description="Assessment of documentation quality, including value-added comments, missing documentation, and consistency with code.",
-        default=None
-    )
-
-
-class Testability(BaseEvaluation):
-    modularity: Optional[str] = Field(
-        description="Evaluation of the modularity of the code, including clear separation of concerns and encapsulation.",
-        default=None
-    )
-    test_coverage: Optional[str] = Field(
-        description="Assessment of the test coverage, focusing on critical paths and edge cases.",
-        default=None
-    )
-    ease_of_testing: Optional[str] = Field(
-        description="Evaluation of how easily the code can be tested, including the presence of test hooks or dependencies.",
-        default=None
-    )
-    evaluator_notes: Optional[str] = Field(
-        description="Additional notes or remarks by the evaluator for context or clarification.",
-        default=None
-    )
 
 
 class CodeQualityEvaluation(BaseModel):
