@@ -37,9 +37,9 @@ def create_analysis_graph(
     Returns:
         Graph: Compiled workflow graph
     """
-    prepare_pr_node_name = agent_name + ANALYSIS_NODES.PREPARE_PR.value
-    run_analysis_node_name = agent_name + ANALYSIS_NODES.RUN_ANALYSIS.value
-    process_analysis_node_name = agent_name + ANALYSIS_NODES.PROCESS_ANALYSIS.value
+    prepare_pr_node_name = f"{agent_name}_{ANALYSIS_NODES.PREPARE_PR.value}"
+    run_analysis_node_name = f"{agent_name}_{ANALYSIS_NODES.RUN_ANALYSIS.value}"
+    process_analysis_node_name = f"{agent_name}_{ANALYSIS_NODES.PROCESS_ANALYSIS.value}"
     
         # Create graph with provided state class
     workflow = StateGraph(state_class, output=state_class)
@@ -59,7 +59,7 @@ def create_analysis_graph(
     )
 
     workflow.add_node(
-        agent_name + ANALYSIS_NODES.PROCESS_ANALYSIS.value,
+        process_analysis_node_name,
         process_function
     )
 
