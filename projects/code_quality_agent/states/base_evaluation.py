@@ -8,7 +8,7 @@ class BaseEvaluation(BaseModel):
     pr_id: str = Field(
         description="ID of the PR"
     )
-    score: QualityLevel = Field(
+    score: int = Field(
         description="Score, where 0 represents WORST and 100 represents BEST.",
         default=QualityLevel.WORST
     )

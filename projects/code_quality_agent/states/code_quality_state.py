@@ -34,7 +34,7 @@ class CodeQualityEvaluation(BaseModel):
         description="List of messages",
         default=[]
     )
-    evaluation: BaseEvaluation = Field(
+    evaluation: Optional[BaseEvaluation] = Field(
         description="Evaluations for individual pull requests.",
         default=None
     )

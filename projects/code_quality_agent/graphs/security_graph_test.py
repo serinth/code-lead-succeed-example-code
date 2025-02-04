@@ -126,8 +126,8 @@ injection_test_cases: List[TestCase] = [
 @pytest.fixture
 def llm() -> OllamaLLM:
     return OllamaLLM(
-        model="codeqwen:latest",
-        temperature=0.2,
+        model="deepseek-v2:16b",
+        temperature=0.0,
         base_url="http://localhost:11434"
     )
 

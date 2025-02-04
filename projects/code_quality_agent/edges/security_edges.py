@@ -5,6 +5,10 @@ from code_analysis_tool.models.pull_request import PullRequest
 from states.base_evaluation import BaseEvaluation
 from states.code_quality_state import CodeQualityEvaluation
 from edges.pr_utils import merged_pr_diffs
+
+from utils.message_processing import extract_json_string
+
+
 def prepare_pr_for_security_analysis(
     state: CodeQualityEvaluation,
     pr: PullRequest
@@ -41,17 +45,18 @@ def prepare_pr_for_security_analysis(
     ]        
     return state
 
+
 def process_llm_response_for_security_assessment(state: CodeQualityEvaluation) -> CodeQualityEvaluation:
     """Process the LLM response from the last message and return the updated state."""
     try:
         # Get the LLM's response from the last message
         last_message = state.messages[-1]
+        last_message = extract_json_string(last_message.content)
         pydantic_parser = PydanticOutputParser(pydantic_object=BaseEvaluation)
-        evaluation = pydantic_parser.parse(last_message.content)
+        evaluation = pydantic_parser.parse(last_message)
         state.evaluation = evaluation
         logger.debug(f"Security evaluation: {evaluation}")
     except Exception as e:
         raise ValueError(f"Failed to process LLM response for {state.employee_id}. Perhaps the model doesn't support json system formatting? Error: {e}")
 
     return state
-    
